@@ -1,4 +1,6 @@
-# lib-lru-cache
+# lib-lru-cache Status Image [![Build Status](https://travis-ci.com/AkashBabu/lib-lru-cache.svg?branch=master)](https://travis-ci.com/AkashBabu/lib-lru-cache) [![Maintainability](https://api.codeclimate.com/v1/badges/0ce521c11691565ee420/maintainability)](https://codeclimate.com/github/AkashBabu/lib-lru-cache/maintainability)
+ 
+
 A very light weight LRU Cache Implementation in nodejs.  
 Suggest you to use this library for caching very small amounts of data ( < 100 ).  
 This library uses HashMap(for checking existence) and DLL (for storing LRU cache) datastructures
