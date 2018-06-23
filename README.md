@@ -7,24 +7,15 @@ This library uses HashMap(for checking existence) and DLL (for storing LRU cache
 
 ## Methods
 
-`constructor`  
-```js
-new LRUCache(maxLimit = 100)
-```
+`new LRUCache(maxLimit = 100)`    
 Creates an LRUCache with Max Limit in size equals to maxLimit. *defaults to 100*  
 *Please note that you cannot use the LRUCache if the maxLimit is more than 100, as that might hog up a lot of RAM*
 
-`set()`
-```js
-.set('name', 'test')
-```
+`set('name', 'test')`  
 **(key, val)** Save key => val pair and if the maxLimit of the Cache has been exceeded, then the First-Used is removed.  
 *Please note that if the same key is set twice, then the previously set value is over-ridden*
 
-`get()`
-```js
-.get('name')
-```
+`get('name')`  
 **(key)** Returns the value of the corresponding key if available, else return *null*
 
 ## Usage 
