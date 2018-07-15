@@ -19,7 +19,11 @@ suite
     for (let i = 0; i < 2000; i++) {
         cache.get(`name${i}`);
     }
+    for (let i = 0; i < 2000; i++) {
+        cache.set(`name${i + i}`, 'test');
+    }
 })
 .on('cycle', event => {
     console.log(String(event.target));
-});
+})
+.run({ async: true });
