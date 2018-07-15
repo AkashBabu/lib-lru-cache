@@ -20,7 +20,6 @@ Creates an LRUCache with Max Limit in size equals to maxLimit. *defaults to 100*
 
 ## Usage 
 
-<<<<<<< HEAD
 ```javascript
 const cache = new LRUCache(2)
 cache.set('name1', 'test1')
@@ -38,12 +37,8 @@ console.log(cache.get('name1')) // null
 ## Coverage
 > npm run coverage
 
-## Contributions
-This is open-source, which makes it obvious for any PRs, but I would request you to add necessary test-cases for the same 
-=======
-## Coverage Report
-> npm run coverage
-
 ## Benchmark
 > npm run benchmark
->>>>>>> template/master
+
+## Contributions
+This is open-source, which makes it obvious for any PRs, but I would request you to add necessary test-cases for the same 

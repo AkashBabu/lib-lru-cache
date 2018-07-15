@@ -10,13 +10,9 @@
         "test:dev": "export NODE_ENV=test &&  npm run _test",
         "coverage": "export NODE_ENV=test && nyc -- npm run _test:exit",
         "build": "$(npm bin)/rimraf dist/ && $(npm bin)/babel src --out-dir dist",
-<<<<<<< HEAD
-        "lint": "$(npm bin)/eslint --config .eslintrc src/index.js"
-=======
         "lint": "$(npm bin)/eslint --config .eslintrc src/index.js",
         "benchmark": "babel-node benchmark/",
         "status": "git status"
->>>>>>> template/master
     },
     "repository": {
         "type": "git",
