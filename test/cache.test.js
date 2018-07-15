@@ -12,8 +12,8 @@ describe('#cache LRU Cache', () => {
         expect(cache.tail).to.be.undefined;
         expect(cache.len).to.be.undefined;
         expect(cache.maxLen).to.be.undefined;
-        expect(cache.setHead).to.be.undefined;
         expect(cache.makeHead).to.be.undefined;
+        expect(cache.removeTail).to.be.undefined;
     });
     it('should make public methods accessible', () => {
         const cache = new LRUCache(2);
@@ -29,6 +29,21 @@ describe('#cache LRU Cache', () => {
         cache.set('name', 'test');
 
         expect(cache.get('name')).to.be.eql('test');
+    });
+
+
+    it('should be able to reset cache', () => {
+        const cache = new LRUCache(3);
+
+        cache.set('name1', 'test1');
+        cache.set('name2', 'test2');
+        cache.set('name3', 'test3');
+
+        cache.reset();
+
+        expect(cache.get('name1')).to.be.null;
+        expect(cache.get('name2')).to.be.null;
+        expect(cache.get('name3')).to.be.null;
     });
 
     it('should not store more than max limit', () => {
@@ -101,20 +116,6 @@ describe('#cache LRU Cache', () => {
         const address = { line1: 'line1', line2: 'line2' };
         cache.set('address', address);
         expect(cache.get('address')).to.eql(address);
-    });
-
-    it('should be able to reset cache', () => {
-        const cache = new LRUCache(3);
-
-        cache.set('name1', 'test1');
-        cache.set('name2', 'test2');
-        cache.set('name3', 'test3');
-
-        cache.reset();
-
-        expect(cache.get('name1')).to.be.null;
-        expect(cache.get('name2')).to.be.null;
-        expect(cache.get('name3')).to.be.null;
     });
 })
 ;
