@@ -1,24 +1,25 @@
-import Benchmark from 'benchmark';
-// import Lib from '../dist';
+import benchmark from 'benchmark';
+import LRUCache from '../dist';
 
-const suite = new Benchmark.Suite();
-// const lib = new Lib();
-const lib = 'stringtest';
+const suite = new benchmark.Suite();
 
-// add tests
+const cache = new LRUCache(1000);
+
 suite
-.add('Lib#test1', () => {
-    lib.test('Hello World!');
+.add('LRUCache#set', () => {
+    cache.set('name', 'test');
 })
-.add('Lib#test2', () => {
-    lib.match('test');
+.add('LRUCache#get', () => {
+    cache.get('name', 'test');
 })
-// add listeners
+.add('LRUCache#regression', () => {
+    for (let i = 0; i < 2000; i++) {
+        cache.set(`name${i}`, 'test');
+    }
+    for (let i = 0; i < 2000; i++) {
+        cache.get(`name${i}`);
+    }
+})
 .on('cycle', event => {
     console.log(String(event.target));
-})
-.on('complete', function () {
-    console.log(`Fastest is ${this.filter('fastest').map('name')}`);
-})
-// run async
-.run({ async: true });
+});
