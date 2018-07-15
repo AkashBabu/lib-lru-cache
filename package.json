@@ -1,6 +1,6 @@
 {
     "name": "lib-lru-cache",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "description": "LRU Cache",
     "main": "dist/index.js",
     "scripts": {
@@ -18,7 +18,12 @@
         "type": "git",
         "url": "git+https://github.com/AkashBabu/lib-lru-cache.git"
     },
-    "keywords": ["cache", "lru", "lru-cache", "fast"],
+    "keywords": [
+        "cache",
+        "lru",
+        "lru-cache",
+        "fast"
+    ],
     "author": "001akashbabu@gmail.com",
     "license": "MIT",
     "bugs": {
