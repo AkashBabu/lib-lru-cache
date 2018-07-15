@@ -1,4 +1,4 @@
-# lib-lru-cache Status Image [![Build Status](https://travis-ci.com/AkashBabu/lib-lru-cache.svg?branch=master)](https://travis-ci.com/AkashBabu/lib-lru-cache) [![Maintainability](https://api.codeclimate.com/v1/badges/0ce521c11691565ee420/maintainability)](https://codeclimate.com/github/AkashBabu/lib-lru-cache/maintainability)
+# lib-lru-cache Status [![Build Status](https://travis-ci.com/AkashBabu/lib-lru-cache.svg?branch=master)](https://travis-ci.com/AkashBabu/lib-lru-cache) [![Maintainability](https://api.codeclimate.com/v1/badges/0ce521c11691565ee420/maintainability)](https://codeclimate.com/github/AkashBabu/lib-lru-cache/maintainability)
  
 
 A very light weight LRU Cache Implementation in nodejs.  
