@@ -4,6 +4,10 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _slicedToArray2 = require('babel-runtime/helpers/slicedToArray');
+
+var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
+
 var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
@@ -18,144 +22,116 @@ var _symbol2 = _interopRequireDefault(_symbol);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// Symbols for Objects and constants
-var MAX_LIMIT = (0, _symbol2.default)('MAX_LIMIT');
-var CACHE = (0, _symbol2.default)('CACHE');
-var DLL = (0, _symbol2.default)('DLL');
+// Private properties
+var cache = (0, _symbol2.default)('Cache');
+var dll = (0, _symbol2.default)('DLL');
+var head = (0, _symbol2.default)('Head');
+var tail = (0, _symbol2.default)('Tail');
+var len = (0, _symbol2.default)('Length');
+var maxLen = (0, _symbol2.default)('MaxLength');
 
-// Symbol for Private Methods
-var cached = (0, _symbol2.default)('cached');
-var removeLastNode = (0, _symbol2.default)('removeLastNode');
-var findNode = (0, _symbol2.default)('findNode');
-var removeNode = (0, _symbol2.default)('removeNode');
-var addNode = (0, _symbol2.default)('addNode');
+// Private methods
+var remove = (0, _symbol2.default)('Remove');
+var setHead = (0, _symbol2.default)('SetHead');
+var makeHead = (0, _symbol2.default)('MakeHead');
+
+var REL = {
+    PREV: 0,
+    NEXT: 1
+};
 
 var LRUCache = function () {
     function LRUCache() {
-        var maxLimit = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 100;
+        var maxLength = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 100;
         (0, _classCallCheck3.default)(this, LRUCache);
 
-        if (+maxLimit > 100) {
-            throw Error('LIMIT > 100 can cost a lot of RAM, In such cases please think about Redis!!!');
+        if (maxLength < 2) {
+            throw new Error('You might not need cache for this maxLen: ' + maxLength + '!!');
         }
 
-        // Max Cache Size
-        this[MAX_LIMIT] = +maxLimit;
+        this[cache] = {};
+        this[dll] = {};
 
-        // Used to check if the key exists (Format [key]: boolean)
-        this[CACHE] = {};
-
-        // Doubly-Linked-list for storing and re-ordering of data
-        this[DLL] = {
-            length: 0,
-            startNode: null,
-            endNode: null
-        };
+        this[head] = null;
+        this[tail] = null;
+        this[len] = 0;
+        this[maxLen] = maxLength;
     }
 
     (0, _createClass3.default)(LRUCache, [{
-        key: cached,
+        key: remove,
         value: function value(key) {
-            return key in this[CACHE];
-        }
-    }, {
-        key: removeLastNode,
-        value: function value() {
-            this[DLL].length--;
-            delete this[CACHE][this[DLL].endNode.key];
-
-            // Change endNode to the one previous to the current endNode
-            var endNode = this[DLL].endNode;
-            this[DLL].endNode = endNode.lNode;
-            endNode.lNode.rNode = null;
-        }
-    }, {
-        key: findNode,
-        value: function value(key) {
-            var node = this[DLL].startNode;
-            while (node.key !== key) {
-                node = node.rNode;
+            if (!(key in this[cache])) {
+                return true;
             }
-            return node;
-        }
-    }, {
-        key: removeNode,
-        value: function value(key) {
-            this[DLL].length--;
-            delete this[CACHE][key];
 
-            var node = this[findNode](key);
+            var _dll$key = (0, _slicedToArray3.default)(this[dll][key], 2),
+                prev = _dll$key[0],
+                next = _dll$key[1];
 
-            var lNode = node.lNode,
-                rNode = node.rNode;
-
-
-            if (lNode) {
-                if (rNode) {
-                    lNode.rNode = rNode.lNode;
-                } else {
-                    lNode.rNode = null;
-                }
-            } else if (rNode) {
-                this[DLL].startNode = rNode;
-                rNode.lNode = null;
+            if (next) {
+                this[dll][next][REL.PREV] = prev;
             } else {
-                this[DLL].startNode = null;
-                this[DLL].endNode = null;
+                this[head] = prev;
+                this[head] && (this[dll][this[head]][REL.NEXT] = null);
             }
 
-            return node;
+            if (prev) {
+                this[dll][prev][REL.NEXT] = next;
+            } else {
+                this[tail] = next;
+                this[tail] && (this[dll][this[tail]][REL.PREV] = null);
+            }
+
+            delete this[cache][key];
+            delete this[dll][key];
+
+            this[len]--;
         }
     }, {
-        key: addNode,
+        key: setHead,
         value: function value(key, val) {
-            this[DLL].length++;
-            this[CACHE][key] = true;
+            this[head] && (this[dll][this[head]][REL.NEXT] = key);
 
-            // Make the new node as the startNode
-            var prevStartNode = this[DLL].startNode;
-            var newNode = {
-                key: key,
-                val: val,
-                rNode: prevStartNode,
-                lNode: null
-            };
+            this[dll][key] = [this[head], null];
+            this[head] = key;
 
-            this[DLL].startNode = newNode;
-            prevStartNode && (prevStartNode.lNode = newNode);
+            this[cache][key] = val;
 
-            // If this is the first node, then it would be the last as well
-            if (this[DLL].length === 1) {
-                this[DLL].endNode = newNode;
-            }
+            this[len]++;
         }
     }, {
-        key: 'set',
-        value: function set(key, val) {
-            // Overriding Logic
-            if (this[cached](key)) {
-                var node = this[findNode](key);
-                node.val = val;
-            } else {
-                // Set New Key
-                this[addNode](key, val);
-
-                if (this[DLL].length > this[MAX_LIMIT]) {
-                    this[removeLastNode]();
-                }
-            }
+        key: makeHead,
+        value: function value(key, val) {
+            val = val || this[cache][key];
+            this[remove](key);
+            this[setHead](key, val);
+        }
+    }, {
+        key: 'reset',
+        value: function reset() {
+            this[cache] = {};
+            this[dll] = {};
+            this[head] = this[tail] = null;
         }
     }, {
         key: 'get',
         value: function get(key) {
-            if (this[cached](key)) {
-                // Bring the Recently used key to the front (startNode)
-                var node = this[removeNode](key);
-                this[addNode](node.key, node.val);
+            key += '';
 
-                return node.val;
-            }
-            return null;
+            if (!(key in this[cache])) return null;
+            this[makeHead](key);
+            return this[cache][key];
+        }
+    }, {
+        key: 'set',
+        value: function set(key, val) {
+            key += '';
+
+            this[makeHead](key, val);
+            this[len] > this[maxLen] && this[remove](this[tail]);
+
+            !this[tail] && (this[tail] = key);
         }
     }]);
     return LRUCache;
