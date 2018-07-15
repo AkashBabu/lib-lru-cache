@@ -9,8 +9,8 @@
         "test": "export NODE_ENV=test && npm run _test:exit",
         "test:dev": "export NODE_ENV=test &&  npm run _test",
         "coverage": "export NODE_ENV=test && nyc -- npm run _test:exit",
-        "build": "$(npm bin)/rimraf dist/ && $(npm bin)/babel src --out-dir dist",
-        "lint": "$(npm bin)/eslint --config .eslintrc src/index.js",
+        "build": "rimraf dist/ && babel src --out-dir dist",
+        "lint": "eslint --config .eslintrc src/index.js",
         "benchmark": "radargun benchmark/**/*.bench.js",
         "status": "git status"
     },
