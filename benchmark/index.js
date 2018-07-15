@@ -1,7 +1,7 @@
-import benchmark from 'benchmark';
+import Benchmark from 'benchmark';
 import LRUCache from '../dist';
 
-const suite = new benchmark.Suite();
+const suite = new Benchmark.Suite();
 
 const cache = new LRUCache(1000);
 
