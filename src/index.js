@@ -1,16 +1,14 @@
-
 // Private properties
-const cache = Symbol('Cache');
-const dll = Symbol('DLL');
-const head = Symbol('Head');
-const tail = Symbol('Tail');
-const len = Symbol('Length');
-const maxLen = Symbol('MaxLength');
+const dll = Symbol('dll');
+const cache = Symbol('cache');
+const head = Symbol('head');
+const tail = Symbol('tail');
+const len = Symbol('len');
+const maxLen = Symbol('maxLen');
 
 // Private methods
-const remove = Symbol('Remove');
-const setHead = Symbol('SetHead');
-const makeHead = Symbol('MakeHead');
+const makeHead = Symbol('makeHead');
+const removeTail = Symbol('removeTail');
 
 const REL = {
     PREV : 0,
@@ -32,59 +30,40 @@ export default class LRUCache {
         this[maxLen] = maxLength;
     }
 
-    [remove](key) {
-        if (!(key in this[cache])) {
-            return true;
-        }
+    [makeHead](key) {
+        // Reducing operations if this is the head-key
+        if (this[head] === key) return this[cache][key];
 
         const [prev, next] = this[dll][key];
-        if (next) {
-            this[dll][next][REL.PREV] = prev;
-        } else {
-            this[head] = prev;
-            this[head] && (this[dll][this[head]][REL.NEXT] = null);
-        }
+        this[dll][next][REL.PREV] = prev;
 
         if (prev) {
             this[dll][prev][REL.NEXT] = next;
         } else {
             this[tail] = next;
-            this[tail] && (this[dll][this[tail]][REL.PREV] = null);
         }
 
-        delete this[cache][key];
-        delete this[dll][key];
-
-        this[len]--;
-    }
-
-    [setHead](key, val) {
-        this[head] && (this[dll][this[head]][REL.NEXT] = key);
-
+        // Setting This as the new Head
+        this[dll][this[head]][REL.NEXT] = key;
         this[dll][key] = [this[head], null];
         this[head] = key;
-
-        this[cache][key] = val;
-
-        this[len]++;
     }
 
-    [makeHead](key, val) {
-        val = val || this[cache][key];
-        this[remove](key);
-        this[setHead](key, val);
-    }
-
-    reset() {
-        this[cache] = {};
-        this[dll] = {};
-        this[head] = this[tail] = null;
+    [removeTail]() {
+        const [_, next] = this[dll][this[tail]];
+        this[dll][next][REL.PREV] = null;
+        delete this[cache][this[tail]];
+        delete this[dll][this[tail]];
+        this[tail] = next;
+        this[len]--;
     }
 
     get(key) {
         key += '';
 
+        // Filtering unavailable keys
         if (!(key in this[cache])) return null;
+
         this[makeHead](key);
         return this[cache][key];
     }
@@ -92,9 +71,50 @@ export default class LRUCache {
     set(key, val) {
         key += '';
 
-        this[makeHead](key, val);
-        this[len] > this[maxLen] && this[remove](this[tail]);
+        if (key in this[cache]) {
+            this[cache][key] = val;
+            this[makeHead](key);
+            return true;
+        }
 
-        !this[tail] && (this[tail] = key);
+
+        this[head] && (this[dll][this[head]][REL.NEXT] = key);
+
+        // Add it into the Cache
+        this[dll][key] = [this[head], null];
+        this[cache][key] = val;
+        this[len]++;
+
+        this[head] = key;
+
+        if (this[tail]) {
+            // Remove last node if len is greater than maxLimit
+            if (this[len] > this[maxLen]) {
+                this[removeTail]();
+            }
+        } else {
+            this[tail] = key;
+        }
     }
+
+    reset() {
+        this[cache] = {};
+        this[dll] = {};
+        this[len] = 0;
+        this[head] = this[tail] = null;
+    }
+}
+
+
+if (require.main === module) {
+    const lruCache = new LRUCache(3);
+    lruCache.set('name1', 'test1');
+    lruCache.set('name2', 'test2');
+    lruCache.set('name3', 'test3');
+    lruCache.set('name4', 'test4');
+
+    lruCache.get('name4');
+    lruCache.get('name3');
+    lruCache.get('name2');
+    lruCache.get('name1');
 }
