@@ -1,6 +1,6 @@
 {
     "name": "lib-lru-cache",
-    "version": "2.0.1",
+    "version": "2.0.2",
     "description": "LRU Cache",
     "main": "dist/index.js",
     "scripts": {
