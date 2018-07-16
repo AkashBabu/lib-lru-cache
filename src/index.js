@@ -77,15 +77,17 @@ export default class LRUCache {
             return true;
         }
 
-
-        this[head] && (this[dll][this[head]][REL.NEXT] = key);
-
         // Add it into the Cache
         this[dll][key] = [this[head], null];
         this[cache][key] = val;
         this[len]++;
 
-        this[head] = key;
+        /**
+         * Below line is equivalent to:
+         * this[head] && (this[dll][this[head]][REL.NEXT] = key);
+         * this[head] = key;
+         */
+        this[head] = (this[dll][this[head]] || {})[REL.NEXT] = key;
 
         if (this[tail]) {
             // Remove last node if len is greater than maxLimit
