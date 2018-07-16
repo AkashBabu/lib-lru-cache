@@ -3,8 +3,10 @@
 
 A blazing fast & light weight LRU Cache Implementation in nodejs.
 
-## Methods
+## Installation
+> npm i lib -S
 
+## Methods
 `new LRUCache(maxLimit = 100)`    
 Creates an LRUCache with Max Limit in size equals to maxLimit. *defaults to 100*  
 *Please note that you cannot use the LRUCache if the maxLimit is more than 100, as that might hog up a lot of RAM*
