@@ -6,11 +6,13 @@ const libCache = new LibCache(1000);
 
 bench([
     function set() {
-        cache.set('name', 'test');
+        cache.set('name1', 'test1');
+        cache.set('name2', 'test2');
     },
     function setLib() {
-        libCache.set('name', 'test');
+        libCache.set('name1', 'test1');
+        libCache.set('name2', 'test2');
     },
 ], {
-    runs: 1000,
+    runs: 10000,
 });
