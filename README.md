@@ -4,7 +4,7 @@
 A blazing fast & light weight LRU Cache Implementation in nodejs.
 
 ## Installation
-> npm i lib -S
+> npm i lib-lru-cache -S
 
 ## Methods
 `new LRUCache(maxLimit = 100)`    
